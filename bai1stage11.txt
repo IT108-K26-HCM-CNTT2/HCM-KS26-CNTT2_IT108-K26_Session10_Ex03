@@ -1,0 +1,57 @@
+
+
+PHẦN 1: PHÂN TÍCH 4 THAM SỐ CỦA HÀM VLOOKUP
+
+
+Trong bài toán tra cứu dữ liệu từ Sheet Danh_Muc sang Sheet Don_Hang,
+cú pháp hàm VLOOKUP như sau:
+=VLOOKUP(lookup_value, table_array, col_index_num, range_lookup)
+
+Phân tích cụ thể từng tham số trong bài toán:
+
+1. lookup_value (Giá trị đem đi tìm kiếm):
+   - Xác định: Là ô chứa Mã linh kiện ở Sheet Don_Hang (ví dụ: ô A2).
+   - Ý nghĩa: Đây là mã dùng để đối chiếu giữa hai bảng dữ liệu.
+
+2. table_array (Vùng/Bảng chứa dữ liệu cần tra):
+   - Xác định: Là toàn bộ bảng dữ liệu trong Sheet Danh_Muc chứa thông
+     tin Mã, Tên và Đơn giá (ví dụ: 'Danh_Muc'!$A$2:$C$100).
+   - Lưu ý đặc biệt: Bắt buộc phải dùng dấu $ (bấm phím F4) để CỐ ĐỊNH
+     TUYỆT ĐỐI vùng dữ liệu. Nếu không cố định, khi kéo công thức xuống
+     các dòng dưới, vùng tìm kiếm sẽ bị dịch chuyển dẫn đến lỗi #N/A
+     hàng loạt (Bẫy 1).
+
+3. col_index_num (Thứ tự cột lấy dữ liệu):
+   - Khi cần lấy Tên linh kiện: Nhập số 2 (vì cột Tên nằm ở vị trí
+     thứ 2 tính từ cột Mã trong bảng tra).
+   - Khi cần lấy Đơn giá: Nhập số 3 (vì cột Đơn giá nằm ở vị trí
+     thứ 3 trong bảng tra).
+
+4. range_lookup (Kiểu tìm kiếm):
+   - Nhập FALSE (hoặc 0) để tìm kiếm chính xác tuyệt đối. Đảm bảo
+     Mã linh kiện phải khớp hoàn toàn mới trả về kết quả.
+
+
+PHẦN 2: TRIỂN KHAI CÔNG THỨC HOÀN CHỈNH
+
+
+1. Giả định địa chỉ dữ liệu:
+   - Sheet Don_Hang: Cột A chứa Mã linh kiện (bắt đầu từ A2).
+   - Sheet Danh_Muc: Vùng tra cứu nằm ở '$A$2:$C$100' (Cột A: Mã,
+     Cột B: Tên, Cột C: Đơn giá).
+
+2. Kỹ thuật xử lý bẫy dữ liệu và lỗi:
+   - Hàm TRIM(A2): Dùng để xóa khoảng trắng thừa ở mã linh kiện (Bẫy 2).
+   - Hàm IFERROR(..., "Không tìm thấy"): Dùng để ẩn lỗi #N/A và hiển thị
+     thông báo thân thiện nếu không tìm thấy mã trong danh mục.
+
+3. Công thức chi tiết:
+
+   a. Công thức lấy Tên linh kiện (tại ô B2 - Sheet Don_Hang):
+      =IFERROR(VLOOKUP(TRIM(A2), 'Danh_Muc'!$A$2:$C$100, 2, FALSE), "Không tìm thấy")
+
+   b. Công thức lấy Đơn giá (tại ô C2 - Sheet Don_Hang):
+      =IFERROR(VLOOKUP(TRIM(A2), 'Danh_Muc'!$A$2:$C$100, 3, FALSE), "Không tìm thấy")
+
+(Sau khi nhập công thức tại B2 và C2, chỉ cần kéo hoặc nhấp đôi chuột
+vào góc dưới bên phải ô để áp dụng tự động cho toàn bộ 100 dòng).
